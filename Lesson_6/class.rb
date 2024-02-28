@@ -1,4 +1,4 @@
-puts "hello world"
+puts "new hello world"
 gets
 
 class Card

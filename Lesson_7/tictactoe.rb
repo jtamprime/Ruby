@@ -1,4 +1,4 @@
-# puts "hello world"
+puts "hello world"
 
 class Board
   def initialize

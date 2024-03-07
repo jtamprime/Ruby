@@ -2,12 +2,20 @@ require_relative "piece"
 
 class Pawn < Piece
   def picture
-     "\u265F"
+    "\u265F"
   end
 
-  def valid_move?(from, to, board)
-    from_row, from_column = from.chars.map(&:to_i)
-    to_row, to_column = to.chars.map(&:to_i)
+  def valid_moves
+    # returns all of the coordinates you could go to
+  end
+
+  def valid_move?(to)
+    # return false if my king is in_check?
+
+    return false unless super
+
+    from_row, from_column = position
+    to_row, to_column = to
 
     return true if from_row + direction == to_row && from_column == to_column
 
@@ -18,7 +26,7 @@ class Pawn < Piece
     false
   end
 
-  def is_attacking?(coord,board)
+  def is_attacking?(coord)
     coord_row, coord_column = coord.chars.map(&:to_i)
 
     piece_1 = board.get_piece("#{coord_row + direction}#{coord_column + 1}")
@@ -30,6 +38,9 @@ class Pawn < Piece
     false
   end
 
+  def color
+    @color
+  end
 
   def direction
     @color == "white" ? -1 : 1

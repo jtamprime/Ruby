@@ -1,5 +1,5 @@
 require_relative "pieces"
-
+require 'colorize'
 
 class Board
   attr_reader :grid
@@ -23,7 +23,7 @@ class Board
   end
 
   def set_piece(piece, coordinate)
-    row, column = coordinate.chars.map(&:to_i)
+    row, column = coordinate
 
     @grid[row][column] = piece
   end
@@ -32,33 +32,6 @@ class Board
     row, column = coord.chars.map(&:to_i)
 
     @grid[row][column]
-  end
-
-  def set_up_pieces
-    (10..17).each do |coord|
-      set_piece(Pawn.new("black"), coord.to_s)
-    end
-    set_piece(Rook.new("black"), "00")
-    set_piece(Rook.new("black"), "07")
-    set_piece(King.new("black"), "04")
-    set_piece(Queen.new("black"), "03")
-    set_piece(Bishop.new("black"), "02")
-    set_piece(Bishop.new("black"), "05")
-    set_piece(Knight.new("black"), "01")
-    set_piece(Knight.new("black"), "06")
-
-    (60..67).each do |coord|
-      set_piece(Pawn.new("white"), coord.to_s)
-    end
-
-    set_piece(Rook.new("white"), "70")
-    set_piece(Rook.new("white"), "77")
-    set_piece(King.new("white"), "74")
-    set_piece(Queen.new("white"), "73")
-    set_piece(Bishop.new("white"), "72")
-    set_piece(Bishop.new("white"), "75")
-    set_piece(Knight.new("white"), "71")
-    set_piece(Knight.new("white"), "76")
   end
 
   def move_piece(start_coord, end_coord, whites_turn)
@@ -70,10 +43,11 @@ class Board
     return false if piece.nil?
     return false if piece.color == 'black' && whites_turn
     return false if piece.color == 'white' && !whites_turn
-    return false unless piece.valid_move?(start_coord, end_coord, self)
+    return false unless piece.valid_move?([end_row, end_column])
 
     @grid[start_row][start_column] = nil
     @grid[end_row][end_column] = piece
+    piece.position = [end_row][end_column]
   end
 
   def in_check?(color)
@@ -83,7 +57,7 @@ class Board
         next unless spot.class == Pawn
         next if spot.color == color
 
-        return true if spot.is_attacking?("#{i}#{j}", self)
+        return true if spot.is_attacking?("#{i}#{j}")
       end
     end
 
@@ -91,3 +65,28 @@ class Board
   end
 end
 
+def set_up_pieces
+    (10..17).each do |coord|
+      Pawn.new("black", coord.digits.reverse, self)
+    end
+    Rook.new("black", [0,0], self)
+    Rook.new("black", [0,7], self)
+    King.new("black", [0,4], self)
+    Queen.new("black", [0,3], self)
+    Knight.new("black", [0,1], self)
+    Knight.new("black", [0,6], self)
+    Bishop.new("black", [0,2], self)
+    Bishop.new("black", [0,5], self)
+
+    (60..67).each do |coord|
+      Pawn.new("white", coord.digits.reverse, self)
+    end
+    Rook.new("white", [7,0], self)
+    Rook.new("white", [7,7], self)
+    King.new("white", [7,4], self)
+    Queen.new("white", [7,3], self)
+    Knight.new("white", [7,1], self)
+    Knight.new("white", [7,6], self)
+    Bishop.new("white", [7,2], self)
+    Bishop.new("white", [7,5], self)
+  end

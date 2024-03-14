@@ -31,3 +31,6 @@ puts "      His name is #{rival_name}!#{your_name}!"
 puts "      Your very own POKEMON legend is about to unfold!"
 puts "      A world of dreams and adventures with POKEMON awaits!"
 puts "      Let's go!"
+
+
+#testing
